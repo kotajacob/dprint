@@ -4,17 +4,19 @@
 
 include config.mk
 
-all: clean build
+all: dprint dprint.1
 
-build:
-	go build
+dprint:
+	$(GO) build $(GOFLAGS) -ldflags "-X main.Version=$(VERSION)"
+
+dprint.1:
 	scdoc < dprint.1.scd | sed "s/VERSION/$(VERSION)/g" > dprint.1
 
 clean:
-	rm -f dprint
-	rm -f dprint.1
+	$(RM) dprint
+	$(RM) dprint.1
 
-install: build
+install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f dprint $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dprint
@@ -23,7 +25,9 @@ install: build
 	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/dprint.1
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/dprint
-	rm -f $(DESTDIR)$(MANPREFIX)/man1/dprint.1
+	$(RM) $(DESTDIR)$(PREFIX)/bin/dprint
+	$(RM) $(DESTDIR)$(MANPREFIX)/man1/dprint.1
 
-.PHONY: all build clean install uninstall
+.DEFAULT_GOAL := all
+
+.PHONY: all clean install uninstall
