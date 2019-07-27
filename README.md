@@ -19,5 +19,6 @@ Then compile dprint:
 
 ## License
 
-BSD 3-Clause - Seee License for details.  
+BSD 3-Clause - See License for details.
+
 Copyright 2019 Dakota Walsh
