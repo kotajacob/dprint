@@ -6,17 +6,33 @@ dprint - print specified values from desktop files to stdout.
 
 # SYNOPSIS
 
-*dprint* [-d PATH] [-i KEY:VALUE] [-o KEY]
+_dprint_ [-v] [-d path] [-i key:val] [-o key]
+
+# OPTIONS
+
+*-v*
+	Prints the version and exits.
+*-d path*
+	Look for desktop files in provided path.
+*-i key:val*
+	Select only desktop files with a specific key:value pair.
+*-o key*
+	Ouput the value associated with this specific key for each selected 
+	desktop file.
 
 # DESCRIPTION
 
-If dprint is provided a path to search it will look for and read all the
-.desktop files in that directory. If an input key:value pair was provided
-dprint will ignore files not containing that pair. Finally dprint will print
-the value associated with the output key provided. If no output key was
-provided it will attempt to use the "Name" key. If not path was provided it
-will attempt to use XDG_CONFIG_HOME/dprint/ and if no input key:value pair was
-provided it will simply include all the files in its responce.
+The primary use of dprint is to provide input for program launchers like dmenu,
+but it was designed in such a way that it can be used as a generic desktop file
+reader. First dmenu reads a directory full of .desktop files which can be
+provided with the *-p* option. Without specification it will look in
+XDG_CONFIG_HOME/dprint/ so you can simply copy or link the specific files you
+care about into that directory. The *-i* option is used to narrow the selection
+of desktop files, you simply provide a key and value such as Name:Firefox and
+dprint will ignore all files not containing that pair. Finally dprint will
+print out a value from the selected file or files. If the *-o* option is
+provided it will print the value associated with that specific key, otherwise
+it will print the value of the "Name" key.
 
 # AUTHORS
 

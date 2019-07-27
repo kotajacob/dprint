@@ -2,6 +2,11 @@
 
 Print specified values from desktop files to stdout.
 
+## Usage
+
+`dprint [-v] [-d path] [-i key:val] [-o key]`
+
+
 ## Building
 
 Install the dependencies:
