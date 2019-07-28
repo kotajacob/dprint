@@ -17,14 +17,14 @@ _dprint_ [-v] [-d path] [-i key:val] [-o key]
 *-i key:val*
 	Select only desktop files with a specific key:value pair.
 *-o key*
-	Ouput the value associated with this specific key for each selected 
+	Output the value associated with this specific key for each selected 
 	desktop file.
 
 # DESCRIPTION
 
 The primary use of dprint is to provide input for program launchers like dmenu,
 but it was designed in such a way that it can be used as a generic desktop file
-reader. First dmenu reads a directory full of .desktop files which can be
+reader. First dprint reads a directory full of .desktop files which can be
 provided with the *-d* option. Without specification it will look in
 XDG_CONFIG_HOME/dprint/ so you can simply copy or link the specific files you
 care about into that directory. The *-i* option is used to narrow the selection
