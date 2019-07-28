@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"git.sr.ht/~kota/xdg/basedir"
 	"git.sr.ht/~sircmpwn/getopt"
@@ -17,10 +18,28 @@ var (
 	Config  string
 )
 
+// regex to check if the file is a desktop file
+var r = regexp.MustCompile(`(?m)(.*)\.desktop`)
+
+// usage prints some basic usage information
 func usage() {
 	log.Fatal("Usage: dprint [-v] [-d path] [-i key:val] [-o key]")
 }
 
+// visit is called on each file or directory in the specified path
+func visit(p string, info os.FileInfo, err error) error {
+	if err != nil {
+		return err
+	}
+	if info.IsDir() == false {
+		if r.MatchString(info.Name()) {
+			fmt.Println(info.Name())
+		}
+	}
+	return nil
+}
+
+// set the config path to the XDG standard location if not set with -d
 func setConfig(d string) string {
 	if d == "" {
 		d = filepath.Join(basedir.ConfigHome, Config)
@@ -54,8 +73,16 @@ func main() {
 		usage()
 		return
 	}
+	// set dir to default XDG path if blank
 	dir = setConfig(dir)
-	println(dir)
-	println(in)
-	println(out)
+
+	// walk the dir and call visit for each file or subdir
+	err = filepath.Walk(dir, visit)
+	if err != nil {
+		fmt.Printf("Failed reading directory: %v\n", err)
+		os.Exit(1)
+	}
+
+	// TEST
+	fmt.Println(in, out)
 }
