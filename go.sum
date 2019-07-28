@@ -1,3 +1,5 @@
+git.sr.ht/~kota/xdg v0.0.0-20190727231729-a0d3116b69dc h1:t2RdUVQYrcWgz5RZuas0YNHSNCpF2hFicD6ILY+EmMs=
+git.sr.ht/~kota/xdg v0.0.0-20190727231729-a0d3116b69dc/go.mod h1:HPFkbkyRzfc7eSajA6H0CR5Eos1I7TjSUHr2vy9k/z8=
 git.sr.ht/~sircmpwn/getopt v0.0.0-20190621174457-292febf82fd0 h1:gUeOEsT0mhoCKxKYJk8HeYtUZME686xs70eG2l80W5U=
 git.sr.ht/~sircmpwn/getopt v0.0.0-20190621174457-292febf82fd0/go.mod h1:wMEGFFFNuPos7vHmWXfszqImLppbc0wEhh6JBfJIUgw=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=

@@ -7,7 +7,9 @@ include config.mk
 all: dprint dprint.1
 
 dprint:
-	$(GO) build $(GOFLAGS) -ldflags "-X main.Version=$(VERSION)"
+	$(GO) build $(GOFLAGS) \
+		-ldflags "-X main.Version=$(VERSION) \
+		-X main.Config=$(CONFIG)"
 
 dprint.1:
 	scdoc < dprint.1.scd | sed "s/VERSION/$(VERSION)/g" > dprint.1

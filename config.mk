@@ -1,5 +1,6 @@
 # dprint
 VERSION = 0.1.0
+CONFIG = dprint
 
 # Customize below to fit your system
 

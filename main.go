@@ -4,16 +4,26 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
+	"git.sr.ht/~kota/xdg/basedir"
 	"git.sr.ht/~sircmpwn/getopt"
 )
 
 var (
 	Version string
+	Config  string
 )
 
 func usage() {
 	log.Fatal("Usage: dprint [-v] [-d path] [-i key:val] [-o key]")
+}
+
+func setConfig(d string) string {
+	if d == "" {
+		d = filepath.Join(basedir.ConfigHome, Config)
+	}
+	return d
 }
 
 func main() {
@@ -42,6 +52,7 @@ func main() {
 		usage()
 		return
 	}
+	dir = setConfig(dir)
 	println(dir)
 	println(in)
 	println(out)
