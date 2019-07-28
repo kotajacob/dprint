@@ -25,7 +25,7 @@ _dprint_ [-v] [-d path] [-i key:val] [-o key]
 The primary use of dprint is to provide input for program launchers like dmenu,
 but it was designed in such a way that it can be used as a generic desktop file
 reader. First dmenu reads a directory full of .desktop files which can be
-provided with the *-p* option. Without specification it will look in
+provided with the *-d* option. Without specification it will look in
 XDG_CONFIG_HOME/dprint/ so you can simply copy or link the specific files you
 care about into that directory. The *-i* option is used to narrow the selection
 of desktop files, you simply provide a key and value such as Name:Firefox and
