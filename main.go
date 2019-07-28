@@ -1,3 +1,4 @@
+// dprint - print specified values from desktop files to stdout
 package main
 
 import (
@@ -10,6 +11,7 @@ import (
 	"git.sr.ht/~sircmpwn/getopt"
 )
 
+// variables set by config.mk
 var (
 	Version string
 	Config  string
