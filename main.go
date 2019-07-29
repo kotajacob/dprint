@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -24,19 +25,6 @@ var r = regexp.MustCompile(`(?m)(.*)\.desktop`)
 // usage prints some basic usage information
 func usage() {
 	log.Fatal("Usage: dprint [-v] [-d path] [-i key:val] [-o key]")
-}
-
-// visit is called on each file or directory in the specified path
-func visit(p string, info os.FileInfo, err error) error {
-	if err != nil {
-		return err
-	}
-	if info.IsDir() == false {
-		if r.MatchString(info.Name()) {
-			fmt.Println(info.Name())
-		}
-	}
-	return nil
 }
 
 // set the config path to the XDG standard location if not set with -d
@@ -76,13 +64,26 @@ func main() {
 	// set dir to default XDG path if blank
 	dir = setConfig(dir)
 
-	// walk the dir and call visit for each file or subdir
-	err = filepath.Walk(dir, visit)
+	// walk the dir and store file names
+	var s []string
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Printf("Failed reaching path: %q %v\n", path, err)
+			return err
+		}
+		if info.IsDir() == false {
+			if r.MatchString(info.Name()) {
+				// fmt.Println(info.Name())
+				s = append(s, filepath.Join(dir, info.Name()))
+			}
+		}
+		return nil
+	})
 	if err != nil {
-		fmt.Printf("Failed reading directory: %v\n", err)
-		os.Exit(1)
+		fmt.Printf("Failed walking path: %q %v\n", dir, err)
 	}
 
 	// TEST
+	fmt.Println(s)
 	fmt.Println(in, out)
 }
