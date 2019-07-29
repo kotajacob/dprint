@@ -1,0 +1,11 @@
+# To get working
+
+* Key parsing
+* Output key handling (needs Key parsing first)
+* Document possible keys
+
+# Once working
+
+* Write tests
+* Split some functionality into seperate files to simplify main
+* Input globbing (ie: Name:*Firefox* instead of _needing_ the exact name)
