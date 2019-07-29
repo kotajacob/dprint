@@ -93,6 +93,7 @@ func setConfig(d string) string {
 }
 
 func main() {
+	// parse arguments in the getopt style
 	var dir, in, out string
 	opts, optind, err := getopt.Getopts(os.Args, "vd:i:o:")
 	if err != nil {
