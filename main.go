@@ -27,6 +27,63 @@ func usage() {
 	log.Fatal("Usage: dprint [-v] [-d path] [-i key:val] [-o key]")
 }
 
+// readdir returns a slice of os.FileInfo's from dir
+func readdir(dir string) ([]os.FileInfo, error) {
+	f, err := os.Open(dir)
+	if err != nil {
+		return nil, err
+	}
+	list, err := f.Readdir(-1)
+	f.Close()
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+
+// dirfi returns the file info's of directory dir
+func dirfi(dir string) ([]os.FileInfo, error) {
+	infos, err := readdir(dir)
+	if err != nil {
+		return nil, err
+	}
+	return infos, nil
+}
+
+// cName checks that the file info is a desktop file
+func cName(fi os.FileInfo) bool {
+	if fi.IsDir() == false {
+		if r.MatchString(fi.Name()) {
+			return true
+		}
+	}
+	return false
+}
+
+// walk the file tree rooted at dir
+func walk(dir string) ([]desktop.Entry, error) {
+	infos, err := dirfi(dir)
+	if err != nil {
+		return nil, err
+	}
+	var entries []desktop.Entry
+	for _, fi := range infos {
+		if cName(fi) {
+			path := filepath.Join(dir, fi.Name())
+			dat, err := os.Open(path)
+			if err != nil {
+				return nil, err
+			}
+			entry, err := desktop.New(dat)
+			if err != nil {
+				return nil, err
+			}
+			entries = append(entries, *entry)
+		}
+	}
+	return entries, nil
+}
+
 // set the config path to the XDG standard location if not set with -d
 func setConfig(d string) string {
 	if d == "" {
@@ -63,34 +120,14 @@ func main() {
 	}
 	// set dir to default XDG path if blank
 	dir = setConfig(dir)
-
-	// walk the dir and store file names
-	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			fmt.Printf("Failed reaching path: %q %v\n", path, err)
-			return err
-		}
-		if info.IsDir() == false {
-			if r.MatchString(info.Name()) {
-				// s = append(s, filepath.Join(dir, info.Name()))
-				path := filepath.Join(dir, info.Name())
-				dat, err := os.Open(path)
-				if err != nil {
-					fmt.Printf("Error opening desktop file: %v\n", err)
-				}
-				entry, err := desktop.New(dat)
-				if err != nil {
-					fmt.Printf("Error reading desktop file: %v\n", err)
-				}
-				fmt.Println(entry.Name)
-			}
-		}
-		return nil
-	})
+	// walk the directory to get an entries list
+	entries, err := walk(dir)
 	if err != nil {
-		fmt.Printf("Failed walking path: %q %v\n", dir, err)
+		fmt.Printf("Failed getting entries: %q %v\n", dir, err)
 	}
-
 	// TEST
+	for i := 0; i < len(entries); i++ {
+		fmt.Println(entries[i].Name)
+	}
 	fmt.Println(in, out)
 }
