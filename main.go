@@ -105,17 +105,72 @@ func splitInput(in string) (string, string) {
 	return key, val
 }
 
+// checkKey returns true is the entry has the key and value
+func checkKey(entry desktop.Entry, key string, val string) bool {
+	switch key {
+	// case "Type": - skip type for now
+	case "Version":
+		if entry.Version == val {
+			return true
+		}
+	case "Name":
+		if entry.Name == val {
+			return true
+		}
+	case "GenericName":
+		if entry.GenericName == val {
+			return true
+		}
+	case "Comment":
+		if entry.Comment == val {
+			return true
+		}
+	case "Icon":
+		if entry.Icon == val {
+			return true
+		}
+	case "URL":
+		if entry.URL == val {
+			return true
+		}
+	// case "NoDisplay": - skip for now
+	// case "Hidden": - skip for now
+	// case "OnlyShowIn": - skip for now
+	// case "NotShowIn": - skip for now
+	// case "DBusActivatable": - skip for now
+	case "TryExec":
+		if entry.TryExec == val {
+			return true
+		}
+	case "Exec":
+		if entry.Exec == val {
+			return true
+		}
+	case "Path":
+		if entry.Path == val {
+			return true
+		}
+		// case "Terminal": - skip for now
+		// case "Actions": - skip for now
+		// case "MimeType": - skip for now
+		// case "Categories": - skip for now
+		// case "Implements": - skip for now
+		// case "Keywords": - skip for now
+		// case "StartupNotify": - skip for now
+		// case "StartupWMClass": - skip for now
+	}
+	return false
+}
+
 // filter selection by key:value pair
 func filter(in string, entries []desktop.Entry) []desktop.Entry {
 	if in == "" {
 		return entries
 	}
 	key, val := splitInput(in)
-	// ignoring key for now and using Name
-	fmt.Println(key)
 	var selection []desktop.Entry
 	for _, entry := range entries {
-		if entry.Name == val {
+		if checkKey(entry, key, val) {
 			selection = append(selection, entry)
 		}
 	}
@@ -124,7 +179,8 @@ func filter(in string, entries []desktop.Entry) []desktop.Entry {
 
 func main() {
 	// parse arguments in the getopt style
-	var dir, in, out string
+	// var dir, in, out string
+	var dir, in string
 	opts, optind, err := getopt.Getopts(os.Args, "vd:i:o:")
 	if err != nil {
 		log.Print(err)
@@ -140,8 +196,8 @@ func main() {
 			dir = opt.Value
 		case 'i':
 			in = opt.Value
-		case 'o':
-			out = opt.Value
+			// case 'o':
+			// out = opt.Value
 		}
 	}
 	args := os.Args[optind:]
@@ -158,9 +214,8 @@ func main() {
 	}
 	// filter selection by key:value pair
 	entries = filter(in, entries)
-	// TEST
+	// print selections
 	for _, entry := range entries {
 		fmt.Println(entry.Name)
 	}
-	fmt.Println(out)
 }
