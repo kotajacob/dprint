@@ -105,6 +105,23 @@ func splitInput(in string) (string, string) {
 	return key, val
 }
 
+// filter selection by key:value pair
+func filter(in string, entries []desktop.Entry) []desktop.Entry {
+	if in == "" {
+		return entries
+	}
+	key, val := splitInput(in)
+	// ignoring key for now and using Name
+	fmt.Println(key)
+	var selection []desktop.Entry
+	for _, entry := range entries {
+		if entry.Name == val {
+			selection = append(selection, entry)
+		}
+	}
+	return selection
+}
+
 func main() {
 	// parse arguments in the getopt style
 	var dir, in, out string
@@ -139,14 +156,11 @@ func main() {
 	if err != nil {
 		fmt.Printf("Failed getting entries: %q %v\n", dir, err)
 	}
-	// split input into key and value
-	if in != "" {
-		key, val := splitInput(in)
-		fmt.Println(key, val)
-	}
+	// filter selection by key:value pair
+	entries = filter(in, entries)
 	// TEST
-	for i := 0; i < len(entries); i++ {
-		fmt.Println(entries[i].Name)
+	for _, entry := range entries {
+		fmt.Println(entry.Name)
 	}
 	fmt.Println(out)
 }
