@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"git.sr.ht/~kota/xdg/basedir"
 	"git.sr.ht/~kota/xdg/desktop"
@@ -25,6 +26,14 @@ var r = regexp.MustCompile(`(?m)(.*)\.desktop`)
 // usage prints some basic usage information
 func usage() {
 	log.Fatal("Usage: dprint [-v] [-d path] [-i key:val] [-o key]")
+}
+
+// set the config path to the XDG standard location if not set with -d
+func setConfig(d string) string {
+	if d == "" {
+		d = filepath.Join(basedir.ConfigHome, Config)
+	}
+	return d
 }
 
 // readdir returns a slice of os.FileInfo's from dir
@@ -84,12 +93,16 @@ func walk(dir string) ([]desktop.Entry, error) {
 	return entries, nil
 }
 
-// set the config path to the XDG standard location if not set with -d
-func setConfig(d string) string {
-	if d == "" {
-		d = filepath.Join(basedir.ConfigHome, Config)
+// split input string on : into key and value strings
+func splitInput(in string) (string, string) {
+	ins := strings.Split(in, ":")
+	if len(ins) != 2 {
+		fmt.Println("Error reading input key:value pair")
+		os.Exit(1)
 	}
-	return d
+	key := ins[0]
+	val := ins[1]
+	return key, val
 }
 
 func main() {
@@ -126,9 +139,14 @@ func main() {
 	if err != nil {
 		fmt.Printf("Failed getting entries: %q %v\n", dir, err)
 	}
+	// split input into key and value
+	if in != "" {
+		key, val := splitInput(in)
+		fmt.Println(key, val)
+	}
 	// TEST
 	for i := 0; i < len(entries); i++ {
 		fmt.Println(entries[i].Name)
 	}
-	fmt.Println(in, out)
+	fmt.Println(out)
 }
