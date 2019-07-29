@@ -34,6 +34,62 @@ print out a value from the selected file or files. If the *-o* option is
 provided it will print the value associated with that specific key, otherwise
 it will print the value of the "Name" key.
 
+# KEYS
+Below is a list of all currently supported keys. Bool means the value may be
+True or False. List means one or more strings seperated with semi-colons.
+
+*Type*
+	Type - The type of desktop entry. It can be: Application, Link, or 
+	Directory.
+*Version*
+	String - The version of spec that the file conforms to.
+*Name*
+	String - Real name of desktop entry.
+*GenericName*
+	String - Generic name of desktop entry.
+*Comment*
+	String - A short comment that describes the desktop entry.
+*Icon*
+	String - The name of an icon that should be used.
+*URL*
+	String - URL for a link type entry.
+*NoDisplay*
+	Bool - Whether or not to display the file in menus.
+*Hidden*
+	Bool - Whether the use has deleted the desktop entry.
+*OnlyShowIn*
+	List - A list of desktop environments that the desktop entry should
+	only be shown in.
+*NotShowIn*
+	List - A list of desktop environments that the desktop entry should not
+	be shown in.
+*DBusActivatable*
+	Bool - Whether DBus Activation is supported by this application.
+*TryExec*
+	String - The path to an executable to test if the program is installed.
+*Exec*
+	String - Program to execute.
+*Path*
+	String - The path that should be the programs working directory.
+*Terminal*
+	Bool - Whether the program should be in a terminal window.
+*Actions*
+	List - A list of actions.
+*MimeType*
+	List - List of mimetypes supported by this program.
+*Categories*
+	List - List of categories to be shown in in a menu.
+*Implements*
+	List - List of interfaces this application implements.
+*Keywords*
+	List - List of keywords.
+*StartupNotify*
+	Bool - Whether the program will send a "remove" message when started
+	with the DESKTOP_STARTUP_ID env variable is set.
+*StartupWMClass*
+	String - The string that the program will set as WM Class or WM name
+	hint.
+
 # AUTHORS
 
 Maintained by Dakota Walsh <kota at nilsu.org>.
