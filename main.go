@@ -3,13 +3,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"regexp"
 
 	"git.sr.ht/~kota/xdg/basedir"
+	"git.sr.ht/~kota/xdg/desktop"
 	"git.sr.ht/~sircmpwn/getopt"
 )
 
@@ -65,7 +65,6 @@ func main() {
 	dir = setConfig(dir)
 
 	// walk the dir and store file names
-	var s []string
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			fmt.Printf("Failed reaching path: %q %v\n", path, err)
@@ -73,8 +72,17 @@ func main() {
 		}
 		if info.IsDir() == false {
 			if r.MatchString(info.Name()) {
-				// fmt.Println(info.Name())
-				s = append(s, filepath.Join(dir, info.Name()))
+				// s = append(s, filepath.Join(dir, info.Name()))
+				path := filepath.Join(dir, info.Name())
+				dat, err := os.Open(path)
+				if err != nil {
+					fmt.Printf("Error opening desktop file: %v\n", err)
+				}
+				entry, err := desktop.New(dat)
+				if err != nil {
+					fmt.Printf("Error reading desktop file: %v\n", err)
+				}
+				fmt.Println(entry.Name)
 			}
 		}
 		return nil
@@ -84,6 +92,5 @@ func main() {
 	}
 
 	// TEST
-	fmt.Println(s)
 	fmt.Println(in, out)
 }
