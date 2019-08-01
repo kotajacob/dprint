@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -204,6 +205,25 @@ func main() {
 	if len(args) > 0 {
 		usage()
 		return
+	}
+	// replace args if needed
+	if dir == "-" {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			dir = scanner.Text()
+		}
+	}
+	if in == "-" {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			in = scanner.Text()
+		}
+	}
+	if out == "-" {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			out = scanner.Text()
+		}
 	}
 	// set dir to default XDG path if blank
 	dir = setConfig(dir)
