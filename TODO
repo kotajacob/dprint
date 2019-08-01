@@ -1,6 +1,6 @@
 # To get working
 
-* Key parsing
+* Refactor key parsing and walking to other files if possible
 * Output key handling (needs Key parsing first)
 
 # Once working
