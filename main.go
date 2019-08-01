@@ -106,6 +106,23 @@ func splitInput(in string) (string, string) {
 	return key, val
 }
 
+func stripExec(in string) string {
+	out := strings.Replace(in, "%f", "", -1)
+	out = strings.Replace(out, "%F", "", -1)
+	out = strings.Replace(out, "%u", "", -1)
+	out = strings.Replace(out, "%U", "", -1)
+	out = strings.Replace(out, "%d", "", -1)
+	out = strings.Replace(out, "%D", "", -1)
+	out = strings.Replace(out, "%n", "", -1)
+	out = strings.Replace(out, "%N", "", -1)
+	out = strings.Replace(out, "%i", "", -1)
+	out = strings.Replace(out, "%c", "", -1)
+	out = strings.Replace(out, "%k", "", -1)
+	out = strings.Replace(out, "%v", "", -1)
+	out = strings.Replace(out, "%m", "", -1)
+	return out
+}
+
 // checkKey returns true is the entry has the key and value
 func checkKey(entry desktop.Entry, key string, val string) bool {
 	switch key {
@@ -163,6 +180,47 @@ func checkKey(entry desktop.Entry, key string, val string) bool {
 	return false
 }
 
+// getOut returns the string tied to an output value
+func getOut(entry desktop.Entry, key string) string {
+	switch key {
+	// case "Type": - skip type for now
+	case "Version":
+		return entry.Version
+	case "Name":
+		return entry.Name
+	case "GenericName":
+		return entry.GenericName
+	case "Comment":
+		return entry.Comment
+	case "Icon":
+		return entry.Icon
+	case "URL":
+		return entry.URL
+	// case "NoDisplay": - skip for now
+	// case "Hidden": - skip for now
+	// case "OnlyShowIn": - skip for now
+	// case "NotShowIn": - skip for now
+	// case "DBusActivatable": - skip for now
+	case "TryExec":
+		return entry.TryExec
+	case "Exec":
+		return entry.Exec
+	case "StripExec":
+		return stripExec(entry.Exec)
+	case "Path":
+		return entry.Path
+		// case "Terminal": - skip for now
+		// case "Actions": - skip for now
+		// case "MimeType": - skip for now
+		// case "Categories": - skip for now
+		// case "Implements": - skip for now
+		// case "Keywords": - skip for now
+		// case "StartupNotify": - skip for now
+		// case "StartupWMClass": - skip for now
+	}
+	return entry.Name
+}
+
 // filter selection by key:value pair
 func filter(in string, entries []desktop.Entry) []desktop.Entry {
 	if in == "" {
@@ -180,8 +238,7 @@ func filter(in string, entries []desktop.Entry) []desktop.Entry {
 
 func main() {
 	// parse arguments in the getopt style
-	// var dir, in, out string
-	var dir, in string
+	var dir, in, out string
 	opts, optind, err := getopt.Getopts(os.Args, "vd:i:o:")
 	if err != nil {
 		log.Print(err)
@@ -197,8 +254,8 @@ func main() {
 			dir = opt.Value
 		case 'i':
 			in = opt.Value
-			// case 'o':
-			// out = opt.Value
+		case 'o':
+			out = opt.Value
 		}
 	}
 	args := os.Args[optind:]
@@ -234,8 +291,14 @@ func main() {
 	}
 	// filter selection by key:value pair
 	entries = filter(in, entries)
-	// print selections
+	// print output selections
 	for _, entry := range entries {
-		fmt.Println(entry.Name)
+		// print specified key
+		if out != "" {
+			fmt.Println(getOut(entry, out))
+		} else {
+			// print name as default
+			fmt.Println(entry.Name)
+		}
 	}
 }
