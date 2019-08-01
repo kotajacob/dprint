@@ -6,6 +6,7 @@ Print specified values from desktop files to stdout.
 
 `dprint [-v] [-d path] [-i key:val] [-o key]`
 
+Any input value can be replaced with `-` to use the value from stdin instead.
 
 ## Building
 

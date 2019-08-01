@@ -34,6 +34,11 @@ print out a value from the selected file or files. If the *-o* option is
 provided it will print the value associated with that specific key, otherwise
 it will print the value of the "Name" key.
 
+Often this program will be used by piping its output into fzf or dmenu and then
+back into itself. To use STDIN for an option simply pass *-* after the
+argument. For example *echo "Exec" | dprint -o -* will print the exec values of
+all items.
+
 # KEYS
 Below is a list of all currently supported keys. Bool means the value may be
 True or False. List means one or more strings seperated with semi-colons.
@@ -89,6 +94,22 @@ True or False. List means one or more strings seperated with semi-colons.
 *StartupWMClass*
 	String - The string that the program will set as WM Class or WM name
 	hint.
+
+Additionally a special key can be used in output mode only. It will parse out
+the field codes from the exec line before printing.
+
+*StripExec*
+	String - Program to execute with fiel codes stripped out.
+
+# EXAMPLES
+
+Print name values from all files in ~/.config/dprint/
+	*dprint*
+Print exec values from all files in ~/Downloads/
+	*dprint -d ~/Downloads/ -o "Exec"*
+Print exec values without field codes for files matching "GenericName:Web
+Browser"
+	*echo "StripExec" | dprint -i "GenericName:Web Browser" -o -*
 
 # AUTHORS
 
