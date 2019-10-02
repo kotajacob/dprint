@@ -28,3 +28,10 @@ Then compile dprint:
 BSD 3-Clause - See License for details.
 
 Copyright 2019 Dakota Walsh
+
+## Resources
+
+[Send patches](https://git-send-email.io) and questions to
+[~kota/dprint@lists.sr.ht](https://lists.sr.ht/~kota/dprint).
+
+Bugs & todo here: [~kota/dprint](https://todo.sr.ht/~kota/dprint)
