@@ -31,7 +31,10 @@ Copyright 2019 Dakota Walsh
 
 ## Resources
 
-[Send patches](https://git-send-email.io) and questions to
-[~kota/dprint@lists.sr.ht](https://lists.sr.ht/~kota/dprint).
+dprint uses a public mailing list for contributions and discussion. You can
+browse the list [here](https://lists.sr.ht/~kota/public-inbox) and 
+[email patches](https://git-send-email.io) or questions to 
+[~kota/public-inbox@lists.sr.ht](https://lists.sr.ht/~kota/public-inbox).
 
-Bugs & todo here: [~kota/dprint](https://todo.sr.ht/~kota/dprint)
+If you're reporting an bug/feature request our issue tracker is here:
+[~kota/dprint](https://todo.sr.ht/~kota/dprint)
