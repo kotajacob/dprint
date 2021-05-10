@@ -23,6 +23,10 @@ Then compile dprint:
 
     # make install
 
+## Screenshot
+
+![1](img.webp)
+
 ## License
 
 BSD 3-Clause - See License for details.
