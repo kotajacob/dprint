@@ -37,29 +37,6 @@ func setConfig(d string) string {
 	return d
 }
 
-// readDir returns a slice of os.FileInfo's from dir
-func readDir(dir string) ([]os.FileInfo, error) {
-	f, err := os.Open(dir)
-	if err != nil {
-		return nil, err
-	}
-	list, err := f.Readdir(-1)
-	f.Close()
-	if err != nil {
-		return nil, err
-	}
-	return list, nil
-}
-
-// dirFi returns the file info's of directory dir
-func dirFi(dir string) ([]os.FileInfo, error) {
-	infos, err := readDir(dir)
-	if err != nil {
-		return nil, err
-	}
-	return infos, nil
-}
-
 // cName checks that the file info is a desktop file
 func cName(fi os.FileInfo) bool {
 	if fi.IsDir() == false {
@@ -72,7 +49,12 @@ func cName(fi os.FileInfo) bool {
 
 // walk the file tree rooted at dir
 func walk(dir string) ([]desktop.Entry, error) {
-	infos, err := dirFi(dir)
+	f, err := os.Open(dir)
+	if err != nil {
+		return nil, err
+	}
+	infos, err := f.Readdir(-1)
+	f.Close()
 	if err != nil {
 		return nil, err
 	}
