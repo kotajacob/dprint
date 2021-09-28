@@ -29,15 +29,15 @@ Then compile dprint:
 
 ## License
 
-BSD 3-Clause - See License for details.
+GPL3 - See License for details.
 
 Copyright 2019 Dakota Walsh
 
 ## Resources
 
 dprint uses a public mailing list for contributions and discussion. You can
-browse the list [here](https://lists.sr.ht/~kota/public-inbox) and 
-[email patches](https://git-send-email.io) or questions to 
+browse the list [here](https://lists.sr.ht/~kota/public-inbox) and [email
+patches](https://git-send-email.io) or questions to
 [~kota/public-inbox@lists.sr.ht](https://lists.sr.ht/~kota/public-inbox).
 
 If you're reporting an bug/feature request our issue tracker is here:
