@@ -12,13 +12,16 @@ _dprint_ [-v] [-d path] [-i key:val] [-o key]
 
 *-v*
 	Prints the version and exits.
+
 *-d path*
 	Look for desktop files in provided path.
+
 *-i key:val*
 	Select only desktop files with a specific key:value pair.
+
 *-o key*
-	Output the value associated with this specific key for each selected 
-	desktop file.
+	Output the value associated with this specific key for each selected desktop
+	file.
 
 # DESCRIPTION
 
@@ -40,73 +43,96 @@ argument. For example *echo "Exec" | dprint -o -* will print the exec values of
 all items.
 
 # KEYS
+
 Below is a list of all currently supported keys. Bool means the value may be
 True or False. List means one or more strings seperated with semi-colons.
 
 *Type*
-	Type - The type of desktop entry. It can be: Application, Link, or 
-	Directory.
+	Type - The type of desktop entry. It can be: Application, Link, or Directory.
+
 *Version*
 	String - The version of spec that the file conforms to.
+
 *Name*
 	String - Real name of desktop entry.
+
 *GenericName*
 	String - Generic name of desktop entry.
+
 *Comment*
 	String - A short comment that describes the desktop entry.
+
 *Icon*
 	String - The name of an icon that should be used.
+
 *URL*
 	String - URL for a link type entry.
+
 *NoDisplay*
 	Bool - Whether or not to display the file in menus.
+
 *Hidden*
 	Bool - Whether the use has deleted the desktop entry.
+
 *OnlyShowIn*
-	List - A list of desktop environments that the desktop entry should
-	only be shown in.
+	List - A list of desktop environments that the desktop entry should only be
+	shown in.
+
 *NotShowIn*
-	List - A list of desktop environments that the desktop entry should not
-	be shown in.
+	List - A list of desktop environments that the desktop entry should not be
+	shown in.
+
 *DBusActivatable*
 	Bool - Whether DBus Activation is supported by this application.
+
 *TryExec*
 	String - The path to an executable to test if the program is installed.
+
 *Exec*
 	String - Program to execute.
+
 *Path*
 	String - The path that should be the programs working directory.
+
 *Terminal*
 	Bool - Whether the program should be in a terminal window.
+
 *Actions*
 	List - A list of actions.
+
 *MimeType*
 	List - List of mimetypes supported by this program.
+
 *Categories*
 	List - List of categories to be shown in in a menu.
+
 *Implements*
 	List - List of interfaces this application implements.
+
 *Keywords*
 	List - List of keywords.
+
 *StartupNotify*
-	Bool - Whether the program will send a "remove" message when started
-	with the DESKTOP_STARTUP_ID env variable is set.
+	Bool - Whether the program will send a "remove" message when started with the
+	DESKTOP_STARTUP_ID env variable is set.
+
 *StartupWMClass*
-	String - The string that the program will set as WM Class or WM name
-	hint.
+	String - The string that the program will set as WM Class or WM name hint.
 
 Additionally a special key can be used in output mode only. It will parse out
 the field codes from the exec line before printing.
 
 *StripExec*
-	String - Program to execute with fiel codes stripped out.
+	String - Program to execute with field codes stripped out.
 
 # EXAMPLES
 
 Print name values from all files in ~/.config/dprint/
 	*dprint*
+
 Print exec values from all files in ~/Downloads/
 	*dprint -d ~/Downloads/ -o "Exec"*
+
 Print exec values without field codes for files matching "GenericName:Web
 Browser"
 	*echo "StripExec" | dprint -i "GenericName:Web Browser" -o -*
@@ -118,29 +144,17 @@ Up-to-date sources can be found at https://git.sr.ht/~kota/dprint/
 
 # COPYRIGHT
 
-Copyright 2019 Dakota Walsh
+Copyright (C) 2019 Dakota Walsh
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-1. Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its contributors
-may be used to endorse or promote products derived from this software without
-specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
