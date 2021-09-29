@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git.sr.ht/~kota/xdg/basedir"
-	"git.sr.ht/~kota/xdg/desktop"
 	"git.sr.ht/~sircmpwn/getopt"
+	"github.com/rkoesters/xdg/basedir"
+	"github.com/rkoesters/xdg/desktop"
 )
 
 var (
