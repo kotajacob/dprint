@@ -29,6 +29,73 @@ func usage() {
 	log.Fatal("Usage: dprint [-v] [-d path] [-i key:val] [-o key]")
 }
 
+func main() {
+	// parse arguments in the getopt style
+	var dir, in, out string
+	opts, optind, err := getopt.Getopts(os.Args, "vd:i:o:")
+	if err != nil {
+		log.Print(err)
+		usage()
+		return
+	}
+	for _, opt := range opts {
+		switch opt.Option {
+		case 'v':
+			fmt.Println("dprint " + Version)
+			return
+		case 'd':
+			dir = opt.Value
+		case 'i':
+			in = opt.Value
+		case 'o':
+			out = opt.Value
+		}
+	}
+	args := os.Args[optind:]
+	if len(args) > 0 {
+		usage()
+		return
+	}
+	// replace args if needed
+	if dir == "-" {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			dir = scanner.Text()
+		}
+	}
+	if in == "-" {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			in = scanner.Text()
+		}
+	}
+	if out == "-" {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			out = scanner.Text()
+		}
+	}
+	// set dir to default XDG path if blank
+	dir = setConfig(dir)
+	// walk the directory to get an entries list
+	entries, err := walk(dir)
+	if err != nil {
+		fmt.Printf("Failed getting entries: %q %v\n", dir, err)
+	}
+	// filter selection by key:value pair
+	entries = filter(in, entries)
+	// print output selections
+	for _, entry := range entries {
+		// print specified key
+		if out != "" {
+			fmt.Println(getOut(entry, out))
+		} else {
+			// print name as default
+			fmt.Println(entry.Name)
+		}
+	}
+}
+
 // set the config path to the XDG standard location if not set with -d
 func setConfig(d string) string {
 	if d == "" {
@@ -216,71 +283,4 @@ func filter(in string, entries []desktop.Entry) []desktop.Entry {
 		}
 	}
 	return selection
-}
-
-func main() {
-	// parse arguments in the getopt style
-	var dir, in, out string
-	opts, optind, err := getopt.Getopts(os.Args, "vd:i:o:")
-	if err != nil {
-		log.Print(err)
-		usage()
-		return
-	}
-	for _, opt := range opts {
-		switch opt.Option {
-		case 'v':
-			fmt.Println("dprint " + Version)
-			return
-		case 'd':
-			dir = opt.Value
-		case 'i':
-			in = opt.Value
-		case 'o':
-			out = opt.Value
-		}
-	}
-	args := os.Args[optind:]
-	if len(args) > 0 {
-		usage()
-		return
-	}
-	// replace args if needed
-	if dir == "-" {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			dir = scanner.Text()
-		}
-	}
-	if in == "-" {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			in = scanner.Text()
-		}
-	}
-	if out == "-" {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			out = scanner.Text()
-		}
-	}
-	// set dir to default XDG path if blank
-	dir = setConfig(dir)
-	// walk the directory to get an entries list
-	entries, err := walk(dir)
-	if err != nil {
-		fmt.Printf("Failed getting entries: %q %v\n", dir, err)
-	}
-	// filter selection by key:value pair
-	entries = filter(in, entries)
-	// print output selections
-	for _, entry := range entries {
-		// print specified key
-		if out != "" {
-			fmt.Println(getOut(entry, out))
-		} else {
-			// print name as default
-			fmt.Println(entry.Name)
-		}
-	}
 }
