@@ -31,7 +31,10 @@ func usage() {
 }
 
 func main() {
-	// parse arguments in the getopt style
+	log.SetPrefix("")
+	log.SetFlags(0)
+
+	// parse arguments using getopt
 	var dir, in, out string
 	opts, optind, err := getopt.Getopts(os.Args, "vd:i:o:")
 	if err != nil {
@@ -57,6 +60,7 @@ func main() {
 		usage()
 		return
 	}
+
 	// replace args if needed
 	if dir == "-" {
 		scanner := bufio.NewScanner(os.Stdin)
@@ -76,15 +80,19 @@ func main() {
 			out = scanner.Text()
 		}
 	}
+
 	// set dir to default XDG path if blank
 	dir = getConfig(dir)
+
 	// walk the directory to get an entries list
 	entries, err := walk(dir)
 	if err != nil {
-		fmt.Printf("Failed getting entries: %q %v\n", dir, err)
+		log.Fatalf("failed getting entries: %q %v\n", dir, err)
 	}
+
 	// filter selection by key:value pair
 	entries = filter(in, entries)
+
 	// print output selections
 	for _, entry := range entries {
 		// print specified key
