@@ -6,6 +6,27 @@ Print specified values from desktop files to stdout.
 
 `dprint [-v] [-d path] [-i key:val] [-o key]`
 
+Print specified values from desktop files to stdout. Look, it’s hard to describe
+okay? Here’s a picture of me using it with dmenu.
+
+![1](img.webp)
+
+My launcher script pipes the output of dprint into dmenu to get a selection.
+Then it passes that selection into dprint – with some options – and then the
+output of that gets executed by your shell (to launch the program).
+
+```sh
+#!/bin/sh
+SELECTION=$(dprint | dmenu -i -l 8 "$@")
+echo "Name:$SELECTION" | dprint -i - -o "StripExec" | ${SHELL:-"/bin/sh"} &
+```
+
+I wrote dprint because the default `dmenu_run` script just lists all the
+programs in your `$PATH` _exactly_ as they’re named. There’s no easy way to
+rename them or tweak launch options. For example, that “calculator” program in
+the screenshot runs `st -t st-float -g 76x30 -e python`, and I renamed “ncmpcpp”
+to just “music.”
+
 ## Building
 
 Install the dependencies:
@@ -20,10 +41,6 @@ Then compile dprint:
 ## Installation
 
     # make install
-
-## Screenshot
-
-![1](img.webp)
 
 ## License
 
