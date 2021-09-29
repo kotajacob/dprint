@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"git.sr.ht/~kota/xdg/basedir"
@@ -20,9 +19,6 @@ var (
 	Version string
 	Config  string
 )
-
-// regex to check if the file is a desktop file
-var r = regexp.MustCompile(`(?m)(.*)\.desktop`)
 
 // usage prints some basic usage information
 func usage() {
@@ -104,10 +100,10 @@ func setConfig(d string) string {
 	return d
 }
 
-// cName checks that the file info is a desktop file
-func cName(fi os.FileInfo) bool {
+// checkName checks that the file info is a desktop file
+func checkName(fi os.FileInfo) bool {
 	if !fi.IsDir() {
-		if r.MatchString(fi.Name()) {
+		if filepath.Ext(fi.Name()) == ".desktop" {
 			return true
 		}
 	}
@@ -127,7 +123,7 @@ func walk(dir string) ([]desktop.Entry, error) {
 	}
 	var entries []desktop.Entry
 	for _, fi := range infos {
-		if cName(fi) {
+		if checkName(fi) {
 			path := filepath.Join(dir, fi.Name())
 			dat, err := os.Open(path)
 			if err != nil {
