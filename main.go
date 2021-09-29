@@ -39,7 +39,7 @@ func setConfig(d string) string {
 
 // cName checks that the file info is a desktop file
 func cName(fi os.FileInfo) bool {
-	if fi.IsDir() == false {
+	if !fi.IsDir() {
 		if r.MatchString(fi.Name()) {
 			return true
 		}
