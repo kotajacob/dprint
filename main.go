@@ -14,10 +14,15 @@ import (
 	"git.sr.ht/~sircmpwn/getopt"
 )
 
-// variables set by config.mk
 var (
+	// Version is a semantic version number set at build time. It's configured
+	// in config.mk
 	Version string
-	Config  string
+	// Config represents the directory name under XDG_CONFIG_HOME where desktop
+	// files are searched. This only matters if the -d option isn't used.
+	// This value is normally set out build time and can be configured in
+	// config.mk
+	Config string
 )
 
 // usage prints some basic usage information
@@ -72,7 +77,7 @@ func main() {
 		}
 	}
 	// set dir to default XDG path if blank
-	dir = setConfig(dir)
+	dir = getConfig(dir)
 	// walk the directory to get an entries list
 	entries, err := walk(dir)
 	if err != nil {
@@ -92,15 +97,15 @@ func main() {
 	}
 }
 
-// set the config path to the XDG standard location if not set with -d
-func setConfig(d string) string {
+// getConfig returns the config path.
+func getConfig(d string) string {
 	if d == "" {
 		d = filepath.Join(basedir.ConfigHome, Config)
 	}
 	return d
 }
 
-// checkName checks that the file info is a desktop file
+// checkName checks that the file info is a desktop file.
 func checkName(fi os.FileInfo) bool {
 	if !fi.IsDir() {
 		if filepath.Ext(fi.Name()) == ".desktop" {
@@ -110,7 +115,7 @@ func checkName(fi os.FileInfo) bool {
 	return false
 }
 
-// walk the file tree rooted at dir
+// walk the file tree rooted at dir.
 func walk(dir string) ([]desktop.Entry, error) {
 	f, err := os.Open(dir)
 	if err != nil {
@@ -139,7 +144,7 @@ func walk(dir string) ([]desktop.Entry, error) {
 	return entries, nil
 }
 
-// split input string on : into key and value strings
+// splitInput string on : into key and value strings.
 func splitInput(in string) (string, string) {
 	ins := strings.Split(in, ":")
 	if len(ins) != 2 {
@@ -151,6 +156,7 @@ func splitInput(in string) (string, string) {
 	return key, val
 }
 
+// stripExec removes execution field codes from a string.
 func stripExec(in string) string {
 	out := strings.Replace(in, "%f", "", -1)
 	out = strings.Replace(out, "%F", "", -1)
@@ -168,10 +174,9 @@ func stripExec(in string) string {
 	return out
 }
 
-// checkKey returns true is the entry has the key and value
+// checkKey returns true is the entry has the key and value.
 func checkKey(entry desktop.Entry, key string, val string) bool {
 	switch key {
-	// case "Type": - skip type for now
 	case "Version":
 		if entry.Version == val {
 			return true
@@ -196,11 +201,6 @@ func checkKey(entry desktop.Entry, key string, val string) bool {
 		if entry.URL == val {
 			return true
 		}
-	// case "NoDisplay": - skip for now
-	// case "Hidden": - skip for now
-	// case "OnlyShowIn": - skip for now
-	// case "NotShowIn": - skip for now
-	// case "DBusActivatable": - skip for now
 	case "TryExec":
 		if entry.TryExec == val {
 			return true
@@ -213,22 +213,13 @@ func checkKey(entry desktop.Entry, key string, val string) bool {
 		if entry.Path == val {
 			return true
 		}
-		// case "Terminal": - skip for now
-		// case "Actions": - skip for now
-		// case "MimeType": - skip for now
-		// case "Categories": - skip for now
-		// case "Implements": - skip for now
-		// case "Keywords": - skip for now
-		// case "StartupNotify": - skip for now
-		// case "StartupWMClass": - skip for now
 	}
 	return false
 }
 
-// getOut returns the string tied to an output value
+// getOut returns the string tied to an output value.
 func getOut(entry desktop.Entry, key string) string {
 	switch key {
-	// case "Type": - skip type for now
 	case "Version":
 		return entry.Version
 	case "Name":
@@ -241,11 +232,6 @@ func getOut(entry desktop.Entry, key string) string {
 		return entry.Icon
 	case "URL":
 		return entry.URL
-	// case "NoDisplay": - skip for now
-	// case "Hidden": - skip for now
-	// case "OnlyShowIn": - skip for now
-	// case "NotShowIn": - skip for now
-	// case "DBusActivatable": - skip for now
 	case "TryExec":
 		return entry.TryExec
 	case "Exec":
@@ -254,19 +240,11 @@ func getOut(entry desktop.Entry, key string) string {
 		return stripExec(entry.Exec)
 	case "Path":
 		return entry.Path
-		// case "Terminal": - skip for now
-		// case "Actions": - skip for now
-		// case "MimeType": - skip for now
-		// case "Categories": - skip for now
-		// case "Implements": - skip for now
-		// case "Keywords": - skip for now
-		// case "StartupNotify": - skip for now
-		// case "StartupWMClass": - skip for now
 	}
 	return entry.Name
 }
 
-// filter selection by key:value pair
+// filter selection by key:value pair.
 func filter(in string, entries []desktop.Entry) []desktop.Entry {
 	if in == "" {
 		return entries
