@@ -41,7 +41,7 @@ as output. Additionally, output is sorted by popularity when using this option.
 
 Install the dependencies:
 
-- go (>=1.12)
+- go (>=1.13)
 - scdoc
 
 Then compile dprint:
