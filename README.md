@@ -2,12 +2,7 @@
 
 Print specified values from desktop files to stdout.
 
-## Usage
-
-`dprint [-v] [-d path] [-i key:val] [-o key]`
-
-Print specified values from desktop files to stdout. Look, it’s hard to describe
-okay? Here’s a picture of me using it with dmenu.
+Look, it’s hard to describe okay? Here’s a picture of me using it with dmenu.
 
 ![1](img.webp)
 
@@ -17,8 +12,8 @@ output of that gets executed by your shell (to launch the program).
 
 ```sh
 #!/bin/sh
-SELECTION=$(dprint | dmenu -i -l 8 "$@")
-echo "Name:$SELECTION" | dprint -i - -o "StripExec" | ${SHELL:-"/bin/sh"} &
+SELECTION=$(dprint -p | dmenu -i -l 8 "$@")
+echo "Name:$SELECTION" | dprint -p -i - -o "StripExec" | ${SHELL:-"/bin/sh"} &
 ```
 
 I wrote dprint because the default `dmenu_run` script just lists all the
@@ -26,6 +21,21 @@ programs in your `$PATH` _exactly_ as they’re named. There’s no easy way to
 rename them or tweak launch options. For example, that “calculator” program in
 the screenshot runs `st -t st-float -g 76x30 -e python`, and I renamed “ncmpcpp”
 to just “music.”
+
+## Usage
+
+`dprint [-v] [-p] [-d path] [-i key:val] [-o key]`
+
+*-v*: Prints the version and exits.
+
+*-p*: Keep track of desktop file popularity each time an Exec or StripExec is selected
+as output. Additionally, output is sorted by popularity when using this option.
+
+*-d path*: Look for desktop files in provided path.
+
+*-i key:val*: Filter desktop files with a specific key:value pair.
+
+*-o key*: Output the value associated with a specific key for each selected desktop file.
 
 ## Building
 
@@ -46,7 +56,7 @@ Then compile dprint:
 
 GPL3 - See License for details.
 
-Copyright 2019 Dakota Walsh
+Copyright 2021 Dakota Walsh
 
 ## Resources
 
