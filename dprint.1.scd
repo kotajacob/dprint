@@ -6,21 +6,26 @@ dprint - print specified values from desktop files to stdout.
 
 # SYNOPSIS
 
-_dprint_ [-v] [-d path] [-i key:val] [-o key]
+_dprint_ [-v] [-p] [-d path] [-i key:val] [-o key]
 
 # OPTIONS
 
 *-v*
 	Prints the version and exits.
 
+*-p*
+	Keep track of desktop file popularity each time an Exec or StripExec is
+	selected as output. Additionally, output is sorted by popularity when using
+	this option.
+
 *-d path*
 	Look for desktop files in provided path.
 
 *-i key:val*
-	Select only desktop files with a specific key:value pair.
+	Filter desktop files with a specific key:value pair.
 
 *-o key*
-	Output the value associated with this specific key for each selected desktop
+	Output the value associated with a specific key for each selected desktop
 	file.
 
 # DESCRIPTION
@@ -119,8 +124,10 @@ True or False. List means one or more strings seperated with semi-colons.
 *StartupWMClass*
 	String - The string that the program will set as WM Class or WM name hint.
 
-Additionally a special key can be used in output mode only. It will parse out
-the field codes from the exec line before printing.
+# SPECIAL KEYS
+
+These special keys do not actually exist in the desktop files and can only be
+used in output mode.
 
 *StripExec*
 	String - Program to execute with field codes stripped out.

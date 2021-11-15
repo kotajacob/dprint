@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"git.sr.ht/~sircmpwn/getopt"
@@ -20,14 +21,14 @@ var (
 	Version string
 	// Config represents the directory name under XDG_CONFIG_HOME where desktop
 	// files are searched. This only matters if the -d option isn't used.
-	// This value is normally set out build time and can be configured in
+	// This value is normally set at build time and can be configured in
 	// config.mk
 	Config string
 )
 
 // usage prints some basic usage information
 func usage() {
-	log.Fatal("Usage: dprint [-v] [-d path] [-i key:val] [-o key]")
+	log.Fatal("Usage: dprint [-v] [-p] [-d path] [-i key:val] [-o key]")
 }
 
 func main() {
@@ -36,7 +37,8 @@ func main() {
 
 	// parse arguments using getopt
 	var dir, in, out string
-	opts, optind, err := getopt.Getopts(os.Args, "vd:i:o:")
+	var pop bool
+	opts, optind, err := getopt.Getopts(os.Args, "vpd:i:o:")
 	if err != nil {
 		log.Print(err)
 		usage()
@@ -47,6 +49,8 @@ func main() {
 		case 'v':
 			fmt.Println("dprint " + Version)
 			return
+		case 'p':
+			pop = true
 		case 'd':
 			dir = opt.Value
 		case 'i':
@@ -93,11 +97,20 @@ func main() {
 	// filter selection by key:value pair
 	entries = filter(in, entries)
 
+	// sort by popularity
+	if pop {
+		sort.Sort(ByPopularity(entries))
+	}
+
 	// print output selections
 	for _, entry := range entries {
 		// print specified key
 		if out != "" {
-			fmt.Println(getOut(entry, out))
+			s, err := getOut(entry, out, pop)
+			if err != nil {
+				log.Fatalf("failed getting output key: %v\n", err)
+			}
+			fmt.Println(s)
 		} else {
 			// print name as default
 			fmt.Println(entry.Name)
@@ -225,31 +238,42 @@ func checkKey(entry desktop.Entry, key string, val string) bool {
 	return false
 }
 
-// getOut returns the string tied to an output value.
-func getOut(entry desktop.Entry, key string) string {
+// getOut returns the string tied to an output value. pop indicates to record
+// the popularity count.
+func getOut(entry desktop.Entry, key string, pop bool) (string, error) {
 	switch key {
 	case "Version":
-		return entry.Version
+		return entry.Version, nil
 	case "Name":
-		return entry.Name
+		return entry.Name, nil
 	case "GenericName":
-		return entry.GenericName
+		return entry.GenericName, nil
 	case "Comment":
-		return entry.Comment
+		return entry.Comment, nil
 	case "Icon":
-		return entry.Icon
+		return entry.Icon, nil
 	case "URL":
-		return entry.URL
+		return entry.URL, nil
 	case "TryExec":
-		return entry.TryExec
+		return entry.TryExec, nil
 	case "Exec":
-		return entry.Exec
+		if pop {
+			if err := popUp(entry); err != nil {
+				return "", err
+			}
+		}
+		return entry.Exec, nil
 	case "StripExec":
-		return stripExec(entry.Exec)
+		if pop {
+			if err := popUp(entry); err != nil {
+				return "", err
+			}
+		}
+		return stripExec(entry.Exec), nil
 	case "Path":
-		return entry.Path
+		return entry.Path, nil
 	}
-	return entry.Name
+	return entry.Name, nil
 }
 
 // filter selection by key:value pair.
